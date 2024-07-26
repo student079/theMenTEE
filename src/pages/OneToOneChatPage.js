@@ -22,7 +22,7 @@ const OneToOneChatPage = () => {
 
   useEffect(() => {
     // WebSocket URL에 방 ID만 포함하여 연결
-    socket = new WebSocket(ONE2ONECHAT_API_URL + `/${roomId}`);
+    socket = new WebSocket(process.env.ONE2ONECHAT_API_URL + `/${roomId}`);
 
     // WebSocket이 열렸을 때 호출됨
     socket.onopen = () => {
