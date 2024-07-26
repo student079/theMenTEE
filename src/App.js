@@ -19,6 +19,7 @@ const App = () => {
         />
         <Route path="/one-to-one-chat" element={<UnderConstruction />} />
         <Route path="/my-page" element={<UnderConstruction />} />
+        <Route path="/sgin-in" element={<UnderConstruction />} />
         <Route path="/" element={<LoginPage />} />
       </Routes>
     </Router>

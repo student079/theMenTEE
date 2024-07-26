@@ -26,20 +26,15 @@ const LoginPage = () => {
   };
 
   const handleLogin = async () => {
-    // try {
-    //   const response = await axios.post("https://your-server-endpoint/login", {
-    //     nickname,
-    //   });
-    //   if (response.data.success) {
-    //     navigate("/onboarding");
-    //   } else {
-    //     setErrorMessage(response.data.message || "로그인 실패");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   setErrorMessage("서버 오류가 발생했어요.");
-    // }
-    navigate("/onboarding");
+    if (nickname.trim() !== "") {
+      navigate("/onboarding");
+    } else {
+      setErrorMessage("닉네임을 입력해주세요");
+    }
+  };
+
+  const handleSignin = async () => {
+    navigate("/sgin-in");
   };
 
   return (
@@ -55,10 +50,13 @@ const LoginPage = () => {
           placeholder="닉네임을 입력해주세요"
           value={nickname}
           onChange={handleInputChange}
+          onKeyPress={(e) => {
+            if (e.key === "Enter") handleLogin();
+          }}
         />
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
         <Button onClick={handleLogin}>로그인</Button>
-        <SignUpButton>회원가입</SignUpButton>
+        <SignUpButton onClick={handleSignin}>회원가입</SignUpButton>
       </LoginBox>
     </Container>
   );

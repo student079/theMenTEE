@@ -10,6 +10,7 @@ import {
   SendButton,
   ChatMessageWrapper,
 } from "../components/styles"; // 필요한 스타일 가져오기
+import axios from "axios";
 
 let socket; // WebSocket 인스턴스를 전역 변수로 선언
 
@@ -22,9 +23,7 @@ const OneToOneChatPage = () => {
 
   useEffect(() => {
     // WebSocket URL에 방 ID만 포함하여 연결
-    socket = new WebSocket(
-      process.env.REACT_APP_ONE2ONECHAT_API_URL + `/ws/chat/${roomId}`
-    );
+    socket = new WebSocket(`wss://api.thementeechat.shop/ws/chat/${roomId}`);
 
     // WebSocket이 열렸을 때 호출됨
     socket.onopen = () => {
