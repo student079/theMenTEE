@@ -15,10 +15,23 @@ const PopupContainer = styled.div`
 
 const PopupContent = styled.div`
   background: #fff;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 40px;
+  border-radius: 15px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 400px; /* 적절한 너비 설정 */
+`;
+
+const Title = styled.h2`
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+const Subtitle = styled.p`
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
 `;
 
 const Button = styled.button`
@@ -44,8 +57,8 @@ const MatchSuccessPopup = ({ onClose }) => {
   return (
     <PopupContainer>
       <PopupContent>
-        <h2>매칭에 성공했어요!</h2>
-        <p>1:1 커피챗 바로가기</p>
+        <Title>매칭에 성공했어요!</Title>
+        <Subtitle>1:1 커피챗 바로가기</Subtitle>
         <Button onClick={handleButtonClick}>확인</Button>
       </PopupContent>
     </PopupContainer>

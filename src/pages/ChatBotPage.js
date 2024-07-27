@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ChatSidebar from "../components/ChatSidebar";
 import ChatMessage from "../components/ChatMessage";
 import MessageInput from "../components/MessageInput";
 import MatchSuccessPopup from "../components/MatchSuccessPopup";
 import { ChatContainer, Content } from "../components/styles";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../UserContext";
 import axios from "axios";
 
 const ChatBotPage = () => {
@@ -19,41 +20,54 @@ const ChatBotPage = () => {
     },
   ]);
   const [showPopup, setShowPopup] = useState(false);
+  const [matchedMentor, setMatchedMentor] = useState(null);
   const navigate = useNavigate();
+  const { username } = useContext(UserContext); // Context에서 사용자 이름 가져오기
 
   const handleSend = async (message) => {
     setMessages([...messages, { text: message, isbot: false }]);
-    // try {
-    //   const response = await axios.post(process.env.CHATBOT_API_URL, {
-    //     message,
-    //   });
-    //   if (response.data) {
-    //     setMessages((prevMessages) => [
-    //       ...prevMessages,
-    //       { text: response.data.reply, isbot: true },
-    //     ]);
-    //   }
-    // } catch (error) {
-    //   console.error("Error sending message to server:", error);
-    // }
-
-    // 서버 아직 안되어서 테스트용
-    setTimeout(() => {
-      const botResponse = {
-        text: `${message}\n\n여기서 채팅방 서버로 연동되는 주소: localhost:3000/one-to-one-chat/roomId`,
-        isbot: true,
-      };
-      setMessages((prevMessages) => [...prevMessages, botResponse]);
-    }, 1000); // 1초 후에 챗봇이 메시지를 보내도록 설정
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_CHATBOT_API_URL}/recommend`,
+        {
+          prompt: message,
+        }
+      );
+      console.log(response);
+      if (response.data) {
+        let results = response.data.data;
+        if (results.length === 0) {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: "매칭되는 현직자가 없습니다. 다른 질문을 시도해보세요.",
+              isbot: true,
+            },
+          ]);
+        } else {
+          results = results.recommendations;
+          results.forEach((mentor) => {
+            const mentorResponse = JSON.stringify(mentor);
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { text: mentorResponse, isbot: true },
+            ]);
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error sending message to server:", error);
+    }
   };
 
-  const handleMatchClick = () => {
+  const handleMatchClick = (mentorNickname) => {
+    setMatchedMentor(mentorNickname);
     setShowPopup(true);
   };
 
   const handleClosePopup = () => {
     setShowPopup(false);
-    navigate("/one-to-one-chat");
+    navigate(`/one-to-one-chat/${matchedMentor}/${username}`);
   };
 
   return (
@@ -69,11 +83,21 @@ const ChatBotPage = () => {
           }}
         >
           {messages.map((msg, index) => (
-            <ChatMessage key={index} text={msg.text} isbot={msg.isbot} />
+            <ChatMessage
+              key={index}
+              text={msg.text}
+              isbot={msg.isbot}
+              onMatch={handleMatchClick}
+            />
           ))}
         </div>
         <MessageInput onSend={handleSend} />
-        {showPopup && <MatchSuccessPopup onClose={handleClosePopup} />}
+        {showPopup && (
+          <MatchSuccessPopup
+            mentorNickname={matchedMentor}
+            onClose={handleClosePopup}
+          />
+        )}
       </Content>
     </ChatContainer>
   );

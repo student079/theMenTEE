@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-// import UserContext from "../UserContext";
+import UserContext from "../UserContext";
 import ChatSidebar from "../components/ChatSidebar";
 import {
   ChatContainer,
@@ -9,15 +9,13 @@ import {
   MessageInputField,
   SendButton,
   ChatMessageWrapper,
-} from "../components/styles"; // 필요한 스타일 가져오기
-import axios from "axios";
+} from "../components/styles";
 
-let socket; // WebSocket 인스턴스를 전역 변수로 선언
+let socket;
 
 const OneToOneChatPage = () => {
   const { roomId } = useParams(); // roomId 파라미터 가져오기
-  const { userId } = useParams(); // userId 파라미터 가져오기
-  // const { userId } = useContext(UserContext); // Context에서 사용자 이름 가져오기
+  const { userId } = useParams(); // roomId 파라미터 가져오기
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
 
@@ -49,8 +47,7 @@ const OneToOneChatPage = () => {
         userId: userId,
         message: inputMessage,
       };
-      socket.send(JSON.stringify(payload)); // 서버로 메시지 전송
-      console.log(userId);
+      socket.send(JSON.stringify(payload));
       setInputMessage(""); // 입력 필드 초기화
     }
   };

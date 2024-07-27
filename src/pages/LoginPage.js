@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../UserContext";
 import logo from "../logo.png";
 import {
   Container,
@@ -19,6 +20,7 @@ const LoginPage = () => {
   const [nickname, setNickname] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { setUsername } = useContext(UserContext);
 
   const handleInputChange = (e) => {
     setNickname(e.target.value);
@@ -27,6 +29,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     if (nickname.trim() !== "") {
+      setUsername(nickname);
       navigate("/onboarding");
     } else {
       setErrorMessage("닉네임을 입력해주세요");
