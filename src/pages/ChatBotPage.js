@@ -56,6 +56,25 @@ const ChatBotPage = () => {
         }
       }
     } catch (error) {
+      const temp = [
+        {
+          닉네임: "전략의신",
+          회사: "레이니스트(뱅크샐러드)",
+          회사분위기: "혁신적",
+          직무: "IT 기획자",
+          경력: "2",
+          어조: "논리적",
+          성별: "남",
+          특징: "사교형",
+        },
+      ];
+      temp.forEach((mentor) => {
+        const mentorResponse = JSON.stringify(mentor);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: mentorResponse, isbot: true },
+        ]);
+      });
       console.error("Error sending message to server:", error);
     }
   };
